@@ -1,8 +1,5 @@
 package com.learnjava.blocking;
 
-import static com.learnjava.util.Logger.log;
-import static com.learnjava.util.Timer.startTimer;
-import static com.learnjava.util.Timer.timeTaken;
 import com.learnjava.domain.Inventory;
 import com.learnjava.domain.Product;
 import com.learnjava.domain.ProductInfo;
@@ -14,12 +11,16 @@ import com.learnjava.service.ReviewService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductServiceWithInventoryblocking {
+import static com.learnjava.util.Logger.log;
+import static com.learnjava.util.Timer.startTimer;
+import static com.learnjava.util.Timer.timeTaken;
+
+public class ProductServiceWithInventoryBlocking {
     private final ProductInfoService productInfoService;
     private final ReviewService reviewService;
     private final InventoryService inventoryService;
 
-    public ProductServiceWithInventoryblocking(ProductInfoService productInfoService, ReviewService reviewService, InventoryService inventoryService) {
+    public ProductServiceWithInventoryBlocking(ProductInfoService productInfoService, ReviewService reviewService, InventoryService inventoryService) {
         this.productInfoService = productInfoService;
         this.reviewService = reviewService;
         this.inventoryService = inventoryService;
@@ -52,8 +53,8 @@ public class ProductServiceWithInventoryblocking {
         ProductInfoService productInfoService = new ProductInfoService();
         ReviewService reviewService = new ReviewService();
         InventoryService inventoryService = new InventoryService();
-        ProductServiceWithInventoryblocking productService =
-                new ProductServiceWithInventoryblocking(productInfoService, reviewService, inventoryService);
+        ProductServiceWithInventoryBlocking productService =
+                new ProductServiceWithInventoryBlocking(productInfoService, reviewService, inventoryService);
         String productId = "ABC123";
         Product product = productService.retrieveProductDetails(productId);
         log("Product is " + product);
