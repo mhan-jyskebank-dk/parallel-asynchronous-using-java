@@ -1,11 +1,15 @@
 package com.learnjava.completablefuture;
 
+import com.learnjava.domain.Product;
+import com.learnjava.domain.ProductInfo;
+import com.learnjava.domain.Review;
+import com.learnjava.service.ProductInfoService;
+import com.learnjava.service.ReviewService;
+import java.util.concurrent.CompletableFuture;
+
 import static com.learnjava.util.Logger.log;
 import static com.learnjava.util.Timer.startTimer;
 import static com.learnjava.util.Timer.timeTaken;
-import com.learnjava.domain.Product;
-import com.learnjava.service.ProductInfoService;
-import com.learnjava.service.ReviewService;
 
 public class ProductServiceUsingCompletableFuture {
     private final ProductInfoService productInfoService;
@@ -19,11 +23,18 @@ public class ProductServiceUsingCompletableFuture {
     public Product retrieveProductDetails(String productId) {
         startTimer();
 
-        // your code goes here
+        CompletableFuture<ProductInfo> productInfoCompletableFuture =
+                CompletableFuture.supplyAsync(() -> productInfoService.retrieveProductInfo(productId));
+        CompletableFuture<Review> reviewCompletableFuture =
+                CompletableFuture.supplyAsync(() -> reviewService.retrieveReviews(productId));
+
+        Product product = productInfoCompletableFuture
+                .thenCombine((reviewCompletableFuture), (productInfo, review) -> new Product(productId, productInfo, review))
+                .join();
 
         timeTaken();
 
-        return new Product();
+        return product;
     }
 
     public static void main(String[] args) {

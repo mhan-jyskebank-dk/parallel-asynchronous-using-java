@@ -1,14 +1,18 @@
 package com.learnjava.executor;
 
+import com.learnjava.domain.Product;
+import com.learnjava.domain.ProductInfo;
+import com.learnjava.domain.Review;
+import com.learnjava.service.ProductInfoService;
+import com.learnjava.service.ReviewService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import static com.learnjava.util.Logger.log;
 import static com.learnjava.util.Timer.startTimer;
 import static com.learnjava.util.Timer.timeTaken;
-
-import com.learnjava.domain.Product;
-import com.learnjava.service.ProductInfoService;
-import com.learnjava.service.ReviewService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ProductServiceUsingExecutor {
 
@@ -21,17 +25,21 @@ public class ProductServiceUsingExecutor {
         this.reviewService = reviewService;
     }
 
-    public Product retrieveProductDetails(String productId) {
+    public Product retrieveProductDetails(String productId) throws ExecutionException, InterruptedException {
         startTimer();
 
-        // your code goes here
+        Future<ProductInfo> productInfoFuture = executorService.submit(() -> productInfoService.retrieveProductInfo(productId));
+        Future<Review> reviewFuture = executorService.submit(() -> reviewService.retrieveReviews(productId));
+
+        ProductInfo productInfo = productInfoFuture.get();
+        Review review = reviewFuture.get();
 
         timeTaken();
 
-        return new Product();
+        return new Product(productId, productInfo, review);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         ProductInfoService productInfoService = new ProductInfoService();
         ReviewService reviewService = new ReviewService();
         ProductServiceUsingExecutor productService = new ProductServiceUsingExecutor(productInfoService, reviewService);
