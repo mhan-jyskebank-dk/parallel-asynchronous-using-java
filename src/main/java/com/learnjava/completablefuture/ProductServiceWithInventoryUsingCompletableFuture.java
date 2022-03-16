@@ -1,9 +1,5 @@
 package com.learnjava.completablefuture;
 
-import static com.learnjava.util.Logger.log;
-import static com.learnjava.util.Timer.startTimer;
-import static com.learnjava.util.Timer.timeTaken;
-
 import com.learnjava.domain.Product;
 import com.learnjava.domain.ProductInfo;
 import com.learnjava.domain.ProductOption;
@@ -12,6 +8,10 @@ import com.learnjava.service.ProductInfoService;
 import com.learnjava.service.ReviewService;
 import java.util.Collections;
 import java.util.List;
+
+import static com.learnjava.util.Logger.log;
+import static com.learnjava.util.Timer.startTimer;
+import static com.learnjava.util.Timer.timeTaken;
 
 public class ProductServiceWithInventoryUsingCompletableFuture {
     private final ProductInfoService productInfoService;

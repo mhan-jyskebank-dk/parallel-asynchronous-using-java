@@ -3,13 +3,10 @@ package com.learnjava.blocking;
 import com.learnjava.domain.Inventory;
 import com.learnjava.domain.Product;
 import com.learnjava.domain.ProductInfo;
-import com.learnjava.domain.ProductOption;
 import com.learnjava.domain.Review;
 import com.learnjava.service.InventoryService;
 import com.learnjava.service.ProductInfoService;
 import com.learnjava.service.ReviewService;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.learnjava.util.Logger.log;
 import static com.learnjava.util.Timer.startTimer;
@@ -30,23 +27,20 @@ public class ProductServiceWithInventoryBlocking {
         startTimer();
 
         ProductInfo productInfo = productInfoService.retrieveProductInfo(productId); // blocking call
+        updateInventory(productInfo); // blocking call
         Review review = reviewService.retrieveReviews(productId); // blocking call
-        productInfo.setProductOptions(updateInventory(productInfo)); // blocking call
 
         timeTaken();
 
         return new Product(productId, productInfo, review);
     }
 
-    private List<ProductOption> updateInventory(ProductInfo productInfo) {
-        return productInfo.getProductOptions()
-                .stream()
-                .map(productOption -> {
+    private void updateInventory(ProductInfo productInfo) {
+        productInfo.getProductOptions()
+                .forEach(productOption -> {
                     Inventory inventory = inventoryService.retrieveInventory(productOption);
                     productOption.setInventory(inventory);
-                    return productOption;
-                })
-                .collect(Collectors.toList());
+                });
     }
 
     public static void main(String[] args) {
